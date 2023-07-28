@@ -3,7 +3,7 @@ terraform {
     organization = "DavidsSnowflake"
 
     workspaces {
-      prefix = "snowflake-"
+      name = "snowflake-develop"
     }
   }
   required_providers {
