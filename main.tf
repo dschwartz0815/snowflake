@@ -1,11 +1,11 @@
 terraform {
-    cloud {
-        organization = "DavidsSnowflake"
+  cloud {
+    organization = "DavidsSnowflake"
 
-        workspaces {
-            prefix = "snowflake-"
-        }
+    workspaces {
+      prefix = "snowflake-"
     }
+  }
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
