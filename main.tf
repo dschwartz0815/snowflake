@@ -1,17 +1,15 @@
 terraform {
+    cloud {
+        organization = "DavidsSnowflake"
+
+        workspaces {
+            prefix = "snowflake-"
+        }
+    }
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
       version = "~> 0.68"
-    }
-  }
-
-  backend "remote" {
-    hostname = "app.terraform.io"
-    organization = "DavidsSnowflake"
-
-    workspaces {
-      prefix = "snowflake-"
     }
   }
 }
