@@ -28,9 +28,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        env:
-          TF_WORKSPACE: snowflake-develop
-        run: terraform init
+        run: terraform init -backend-config="organization=DavidsSnowflake" -backend-config="workspaces=snowflake-develop"
 
       - name: Terraform Validate
         id: validate
