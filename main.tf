@@ -2,9 +2,6 @@ terraform {
   cloud {
     organization = "DavidsSnowflake"
 
-    workspaces {
-      name = "snowflake-develop"
-    }
   }
   required_providers {
     snowflake = {
