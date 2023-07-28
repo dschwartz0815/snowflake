@@ -56,7 +56,7 @@ module "module_made_db" {
   db_comment = "Database to store the ingested RAW data"
 
   db_grant_roles = {
-    "OWNERSHIP"     = ["SYSADMIN"]
+    "OWNERSHIP" = ["SYSADMIN"]
   }
 
   schemas = ["DATAGEN", "SEED", "YELLOW_TAXI"]
@@ -83,8 +83,8 @@ module "module_made_db" {
   }
 
   table_grant = {
-    "DATAGEN SELECT" = { "roles" = ["ACCOUNTADMIN"] }
-    "SEED SELECT" = { "roles" = ["ACCOUNTADMIN"] }
+    "DATAGEN SELECT"     = { "roles" = ["ACCOUNTADMIN"] }
+    "SEED SELECT"        = { "roles" = ["ACCOUNTADMIN"] }
     "YELLOW_TAXI SELECT" = { "roles" = ["ACCOUNTADMIN"] }
   }
 }
