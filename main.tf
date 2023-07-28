@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "snowflake" {
-    role = "SYSADMIN"
+  role = "SYSADMIN"
 }
 
 resource "snowflake_database" "test_db" {
