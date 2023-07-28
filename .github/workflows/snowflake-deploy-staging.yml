@@ -1,7 +1,9 @@
 name: "Snowflake Terraform Workflow - Staging"
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - staging
 
@@ -19,14 +21,17 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Format
+      - name: Check Terraform Format and Correct
         id: fmt
-        run: terraform fmt -check
+        run: |
+          terraform fmt -check
+          terraform fmt
+          terraform fmt -check
 
       - name: Terraform Init
         id: init
         env:
-          TF_WORKSPACE: staging
+          TF_WORKSPACE: snowflake-staging
         run: terraform init
 
       - name: Terraform Validate
@@ -35,4 +40,6 @@ jobs:
 
       - name: Terraform Apply
         id: apply
+        env:
+          TF_WORKSPACE: snowflake-staging
         run: terraform apply -auto-approve
