@@ -19,6 +19,9 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      - name: Configure Terraform CLI for Cloud
+        run: terraform login ${{ secrets.TF_API_TOKEN }}
+
       - name: Check Terraform Format and Correct
         id: fmt
         run: |
@@ -28,7 +31,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init -backend-config="organization=DavidsSnowflake" -backend-config="workspaces=snowflake-develop"
+        run: terraform init
 
       - name: Terraform Validate
         id: validate
@@ -36,4 +39,4 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve ./terraform/snowflake-develop
