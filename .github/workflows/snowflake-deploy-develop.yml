@@ -40,4 +40,4 @@ jobs:
         id: apply
         env:
           TF_WORKSPACE: snowflake-develop
-        run: terraform apply -auto-approve ./terraform/snowflake-develop
+        run: terraform apply -auto-approve
