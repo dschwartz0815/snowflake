@@ -20,71 +20,41 @@ resource "snowflake_database" "test_db" {
   comment = "Database for Snowflake Terraform Testing"
 }
 #Create user accounts via module
-module "all_user_accounts" {
-  source = "./user"
-  count  = local.enable_in_dev_flag
-  user_map = {
-    "admin@davidssnowflake.com" : { "first_name" = "Test", "last_name" = "Module", "email" = "admin@davidssnowflake.com" }
-  }
+resource "snowflake_user" "cicd_user" {
+  name         = lower("CICD_USER")
+  login_name   = "CICD_USER"
+  comment      = "Snowflake user account made by cicd"
+  password     = "cicduser"
+  disabled     = false
+  display_name = "CICD User"
+  email        = "cicd_user@example.com"
+  first_name   = "CICD"
+  last_name    = "User"
+
+  default_warehouse = "COMPUTE_WH"
+  default_role      = "PUBLIC"
+
+  must_change_password = false
 }
 #Create new service role via module
-module "regression_role" {
-  source       = "./roles"
-  role_name    = "DEPLOY-REGRESSION"
-  role_comment = "Snowflake role used regression testing"
-
-  roles = ["SYSADMIN"]
-  users = [lower("${var.env_code}_entechlog_dbt_user")]
-
-  depends_on = [module.all_service_accounts]
+resource "snowflake_role" "cicd_role" {
+  name    = "CICD_ROLE"
+  comment = "Snowflake role made by cicd"
 }
 #Create warehouse via module
-module "davids_module_warehouse" {
-  source                 = "./warehouse"
-  warehouse_name         = "DAVID-WAREHOUSE-MODULE"
-  warehouse_size         = "XSMALL"
-  warehouse_auto_suspend = 30
-  warehouse_grant_roles = {
-    "OWNERSHIP" = ["SYSADMIN"]
-  }
+resource "snowflake_warehouse" "cicd_warehouse" {
+  name                = "CICD_WAREHOUSE"
+  comment             = "Small warehouse created by cicd"
+  warehouse_size      = "small"
+  auto_resume         = true
+  auto_suspend        = 10
+  initially_suspended = true
+  max_cluster_count   = 1
+  min_cluster_count   = 1
+  scaling_policy      = "ECONOMY"
 }
-#Create database & schema via module
-module "module_made_db" {
-  source = "./database"
-
-  db_name    = "MODULE_MADE_DB"
-  db_comment = "Database to store the ingested RAW data"
-
-  db_grant_roles = {
-    "OWNERSHIP" = ["SYSADMIN"]
-  }
-
-  schemas = ["DATAGEN", "SEED", "YELLOW_TAXI"]
-
-  /* https://docs.snowflake.com/en/user-guide/security-access-control-privileges.html#schema-privileges */
-  schema_grant = {
-    "DATAGEN OWNERSHIP"        = { "roles" = ["SYSADMIN"] },
-    "DATAGEN USAGE"            = { "roles" = ["SYSADMIN"] },
-    "DATAGEN CREATE TABLE"     = { "roles" = ["SYSADMIN"] },
-    "DATAGEN CREATE VIEW"      = { "roles" = ["SYSADMIN"] },
-    "DATAGEN CREATE STAGE"     = { "roles" = ["SYSADMIN"] },
-    "DATAGEN CREATE PIPE"      = { "roles" = ["SYSADMIN"] },
-    "DATAGEN CREATE FUNCTION"  = { "roles" = ["SYSADMIN"] },
-    "SEED OWNERSHIP"           = { "roles" = ["SYSADMIN"] },
-    "SEED USAGE"               = { "roles" = ["SYSADMIN"] },
-    "SEED CREATE TABLE"        = { "roles" = ["SYSADMIN"] },
-    "SEED CREATE VIEW"         = { "roles" = ["SYSADMIN"] },
-    "SEED CREATE STAGE"        = { "roles" = ["SYSADMIN"] },
-    "YELLOW_TAXI OWNERSHIP"    = { "roles" = ["SYSADMIN"] },
-    "YELLOW_TAXI USAGE"        = { "roles" = ["SYSADMIN"] },
-    "YELLOW_TAXI CREATE TABLE" = { "roles" = ["SYSADMIN"] },
-    "YELLOW_TAXI CREATE VIEW"  = { "roles" = ["SYSADMIN"] },
-    "YELLOW_TAXI CREATE STAGE" = { "roles" = ["SYSADMIN"] },
-  }
-
-  table_grant = {
-    "DATAGEN SELECT"     = { "roles" = ["ACCOUNTADMIN"] }
-    "SEED SELECT"        = { "roles" = ["ACCOUNTADMIN"] }
-    "YELLOW_TAXI SELECT" = { "roles" = ["ACCOUNTADMIN"] }
-  }
+#Create database & schema via cicd
+resource "snowflake_database" "cicd_database" {
+  name    = "CICD_DATABASE"
+  comment = "Database made by cicd"
 }
