@@ -55,3 +55,8 @@ resource "snowflake_database" "cicd_database" {
   name    = "CICD_DATABASE"
   comment = "Database made by cicd"
 }
+
+resource "snowflake_database" "develop_db" {
+  name    = "DEVELOP_DATABASE"
+  comment = "Database for Development"
+}
