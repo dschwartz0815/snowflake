@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "snowflake" {
-  role = "SYSADMIN"
+  role = "ACCOUNTADMIN"
 }
 #Create data base manual way
 resource "snowflake_database" "test_db" {
@@ -49,9 +49,6 @@ resource "snowflake_warehouse" "cicd_warehouse" {
   auto_resume         = true
   auto_suspend        = 10
   initially_suspended = true
-  max_cluster_count   = 1
-  min_cluster_count   = 1
-  scaling_policy      = "ECONOMY"
 }
 #Create database & schema via cicd
 resource "snowflake_database" "cicd_database" {
